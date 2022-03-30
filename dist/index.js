@@ -29827,7 +29827,7 @@ async function main () {
   const majorChanges = []
   const minorChanges = []
   const patchChanges = []
-  const authors = []
+  let authors = []
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
@@ -29906,7 +29906,7 @@ async function main () {
     return section
   }
 
-  let changeLog = `# Release v${next} \n\n`;
+  var changeLog = `# Release v${next} \n\n`;
   if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
     changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
@@ -29916,9 +29916,9 @@ async function main () {
   if (patchChanges.length > 0 && bumpTypes.patchTitle.length > 0) {
     changeLog += buildSection(bumpTypes.patchTitle, patchChanges, bumpTypes.patchEmoji)
   }
-  if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
+  //if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
     changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji, '- @')
-  }
+  //}
 
   core.info(`CHANGELOG : \
   ${changeLog}\
