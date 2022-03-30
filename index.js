@@ -68,7 +68,7 @@ async function main () {
     if ((curPage - 1) * 100 + rangeCommits.length < totalCommits) {
       hasMoreCommits = true
     }
-    core.info(JSON.stringify(rangeCommits))
+    core.info(`Raw commit: ${JSON.stringify(rangeCommits)}`))
   } while (hasMoreCommits)
 
   if (!commits || commits.length < 1) {
