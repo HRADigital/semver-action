@@ -93,22 +93,22 @@ async function main () {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
       if (bumpTypes.major.includes(cAst.type)) {
         majorChanges.push(commit.commit.message)
-        if (!authors.includes(commit.committer.login)) {
+        //if (!authors.includes(commit.committer.login)) {
           authors.push(commit.committer.login)
-        }
+        //}
         core.info(`[MAJOR] Commit ${commit.sha} of type ${cAst.type} will cause a major version bump.`)
       } else if (bumpTypes.minor.includes(cAst.type)) {
         minorChanges.push(commit.commit.message)
         core.info(`[MINOR] Commit ${commit.sha} of type ${cAst.type} will cause a minor version bump.`)
-        if (!authors.includes(commit.committer.login)) {
+        //if (!authors.includes(commit.committer.login)) {
           authors.push(commit.committer.login)
-        }
+        //}
       } else if (bumpTypes.patchAll || bumpTypes.patch.includes(cAst.type)) {
         patchChanges.push(commit.commit.message)
         core.info(`[PATCH] Commit ${commit.sha} of type ${cAst.type} will cause a patch version bump.`)
-        if (!authors.includes(commit.committer.login)) {
+        //if (!authors.includes(commit.committer.login)) {
           authors.push(commit.committer.login)
-        }
+        //}
       } else {
         core.info(`[SKIP] Commit ${commit.sha} of type ${cAst.type} will not cause any version bump.`)
       }
@@ -116,9 +116,9 @@ async function main () {
         if (note.title === 'BREAKING CHANGE') {
           majorChanges.push(commit.commit.message)
           core.info(`[MAJOR] Commit ${commit.sha} has a BREAKING CHANGE mention, causing a major version bump.`)
-          if (!authors.includes(commit.committer.login)) {
+          //if (!authors.includes(commit.committer.login)) {
             authors.push(commit.committer.login)
-          }
+          //}
         }
       }
     } catch (err) {
@@ -152,23 +152,17 @@ async function main () {
     if (emoji.length > 0) {
       section += `${emoji} `;
     }
-    section += `${title}\
-    \
-    `;
+    section += `${title}%0A%0A`;
 
     entries.forEach((entry) => {
-      section += entryPrefix + `${entry}\
-      `;
+      section += entryPrefix + `${entry}%0A`;
     })
-    section += `\
-    `;
+    section += `%0A`;
 
     return section
   }
 
-  var changeLog = `# Release v${next}\
-  \
-  `;
+  var changeLog = `# Release v${next}%0A%0A`;
   if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
     changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
@@ -182,9 +176,7 @@ async function main () {
     changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji, '- @')
   //}
 
-  core.info(`CHANGELOG : \
-  ${changeLog}\
-  `)
+  core.info(`CHANGELOG : %0A${changeLog}%0A`)
 
   // EXPORT VALUES
 
