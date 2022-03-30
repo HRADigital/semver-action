@@ -29906,7 +29906,9 @@ async function main () {
     return section
   }
 
-  var changeLog = `# Release v${next} \n\n`;
+  var changeLog = `# Release v${next}\
+  \
+  `;
   if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
     changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
