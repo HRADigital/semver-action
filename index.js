@@ -147,22 +147,26 @@ async function main () {
 
   // BUILD CHANGELOG
 
-  buildSection = (title, commits, emoji, entryPrefix = '- ') => {
+  buildSection = (title, entries, emoji, entryPrefix = '- ') => {
     let section = '## ';
     if (emoji.length > 0) {
       section += `${emoji} `;
     }
-    section += `${title}\n\n`;
+    section += `${title}\
+    \
+    `;
 
-    commits.forEach((commit) => {
-      section += entryPrefix + `${commit}\n`;
+    entries.forEach((entry) => {
+      section += entryPrefix + `${entry}\
+      `;
     })
-    section += `\n`;
+    section += `\
+    `;
 
     return section
   }
 
-  let changeLog = `# Release v${next}\n\n`;
+  const changeLog = `# Release v${next} \n\n`;
   if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
     changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
@@ -175,6 +179,10 @@ async function main () {
   if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
     changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji, '- @')
   }
+
+  core.info(`CHANGELOG : \
+  ${changeLog}\
+  `)
 
   // EXPORT VALUES
 
