@@ -166,7 +166,7 @@ async function main () {
     return section
   }
 
-  const changeLog = `# Release v${next} \n\n`;
+  let changeLog = `# Release v${next} \n\n`;
   if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
     changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
