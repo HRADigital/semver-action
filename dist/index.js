@@ -29887,7 +29887,7 @@ async function main () {
 
   // BUILD CHANGELOG
 
-  buildSection = (title, commits, emoji) => {
+  buildSection = (title, commits, emoji, entryPrefix = '- ') => {
     let section = '## ';
     if (emoji.length > 0) {
       section += `${emoji} `;
@@ -29895,7 +29895,7 @@ async function main () {
     section += `${title}\n\n`;
 
     commits.forEach((commit) => {
-      section += `- ${commit}\n`;
+      section += entryPrefix + `${commit}\n`;
     })
     section += `\n`;
 
@@ -29913,7 +29913,7 @@ async function main () {
     changeLog += buildSection(bumpTypes.patchTitle, patchChanges, bumpTypes.patchEmoji)
   }
   if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
-    changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji)
+    changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji, '- @')
   }
 
   // EXPORT VALUES
