@@ -13,9 +13,17 @@ async function main () {
 
   const bumpTypes = {
     major: core.getInput('majorList').split(',').map(p => p.trim()).filter(p => p),
+    majorTitle: core.getInput('majorTitle'),
+    majorEmoji: core.getInput('majorEmoji'),
     minor: core.getInput('minorList').split(',').map(p => p.trim()).filter(p => p),
+    minorTitle: core.getInput('minorTitle'),
+    minorEmoji: core.getInput('minorEmoji'),
     patch: core.getInput('patchList').split(',').map(p => p.trim()).filter(p => p),
+    patchTitle: core.getInput('patchTitle'),
+    patchEmoji: core.getInput('patchEmoji'),
     patchAll: (core.getInput('patchAll') === true || core.getInput('patchAll') === 'true'),
+    contributorsTitle: core.getInput('contributorsTitle'),
+    contributorsEmoji: core.getInput('contributorsEmoji'),
   }
 
   // GET LATEST + PREVIOUS TAGS
@@ -68,7 +76,7 @@ async function main () {
     if ((curPage - 1) * 100 + rangeCommits.length < totalCommits) {
       hasMoreCommits = true
     }
-    core.info(`Raw commit: ${JSON.stringify(rangeCommits)}`))
+    core.info(JSON.stringify(rangeCommits))
   } while (hasMoreCommits)
 
   if (!commits || commits.length < 1) {
@@ -80,18 +88,28 @@ async function main () {
   const majorChanges = []
   const minorChanges = []
   const patchChanges = []
+  const authors = []
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
       if (bumpTypes.major.includes(cAst.type)) {
         majorChanges.push(commit.commit.message)
+        if (!authors.includes(commit.committer.login)) {
+          authors.push(commit.committer.login)
+        }
         core.info(`[MAJOR] Commit ${commit.sha} of type ${cAst.type} will cause a major version bump.`)
       } else if (bumpTypes.minor.includes(cAst.type)) {
         minorChanges.push(commit.commit.message)
         core.info(`[MINOR] Commit ${commit.sha} of type ${cAst.type} will cause a minor version bump.`)
+        if (!authors.includes(commit.committer.login)) {
+          authors.push(commit.committer.login)
+        }
       } else if (bumpTypes.patchAll || bumpTypes.patch.includes(cAst.type)) {
         patchChanges.push(commit.commit.message)
         core.info(`[PATCH] Commit ${commit.sha} of type ${cAst.type} will cause a patch version bump.`)
+        if (!authors.includes(commit.committer.login)) {
+          authors.push(commit.committer.login)
+        }
       } else {
         core.info(`[SKIP] Commit ${commit.sha} of type ${cAst.type} will not cause any version bump.`)
       }
@@ -99,6 +117,9 @@ async function main () {
         if (note.title === 'BREAKING CHANGE') {
           majorChanges.push(commit.commit.message)
           core.info(`[MAJOR] Commit ${commit.sha} has a BREAKING CHANGE mention, causing a major version bump.`)
+          if (!authors.includes(commit.committer.login)) {
+            authors.push(commit.committer.login)
+          }
         }
       }
     } catch (err) {
@@ -118,6 +139,37 @@ async function main () {
   }
   core.info(`\n>>> Will bump version ${latestTag.name} using ${bump.toUpperCase()}\n`)
 
+  // BUILD CHANGELOG
+
+  buildSection = (title, commits, emoji) => {
+    let section = '## ';
+    if (emoji.trim().length > 0) {
+      section += `${emoji} `;
+    }
+    section += `${title}\n\n`;
+
+    commits.forEach((commit) => {
+      section += `- ${commit}\n`;
+    })
+    section += `\n`;
+
+    return section
+  }
+
+  let changeLog = `# Release v${next}\n\n`;
+  if (majorChanges.length > 0) {
+    changeLog += buildSection(majorTitle, majorChanges, majorEmoji)
+  }
+  if (minorChanges.length > 0) {
+    changeLog += buildSection(minorTitle, minorChanges, minorEmoji)
+  }
+  if (patchChanges.length > 0) {
+    changeLog += buildSection(patchTitle, patchChanges, patchEmoji)
+  }
+  if (authors.length > 0) {
+    changeLog += buildSection(contributorsTitle, authors, contributorsEmoji)
+  }
+
   // BUMP VERSION
 
   const next = semver.inc(latestTag.name, bump)
@@ -128,6 +180,7 @@ async function main () {
   core.exportVariable('current', latestTag.name)
   core.exportVariable('next', `v${next}`)
   core.exportVariable('nextStrict', next)
+  core.exportVariable('changeLog', changeLog)
 }
 
 main()
