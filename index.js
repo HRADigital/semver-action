@@ -139,6 +139,13 @@ async function main () {
   }
   core.info(`\n>>> Will bump version ${latestTag.name} using ${bump.toUpperCase()}\n`)
 
+  // BUMP VERSION
+
+  const next = semver.inc(latestTag.name, bump)
+
+  core.info(`Current version is ${latestTag.name}`)
+  core.info(`Next version is v${next}`)
+
   // BUILD CHANGELOG
 
   buildSection = (title, commits, emoji) => {
@@ -170,12 +177,7 @@ async function main () {
     changeLog += buildSection(contributorsTitle, authors, contributorsEmoji)
   }
 
-  // BUMP VERSION
-
-  const next = semver.inc(latestTag.name, bump)
-
-  core.info(`Current version is ${latestTag.name}`)
-  core.info(`Next version is v${next}`)
+  // EXPORT VALUES
 
   core.exportVariable('current', latestTag.name)
   core.exportVariable('next', `v${next}`)
