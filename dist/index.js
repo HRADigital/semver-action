@@ -2350,7 +2350,7 @@ function _objectWithoutProperties(source, excluded) {
   return target;
 }
 
-const VERSION = "3.5.1";
+const VERSION = "3.6.0";
 
 const _excluded = ["authStrategy"];
 class Octokit {
@@ -29808,6 +29808,7 @@ async function main () {
     if ((curPage - 1) * 100 + rangeCommits.length < totalCommits) {
       hasMoreCommits = true
     }
+    core.info(JSON.stringify(rangeCommits))
   } while (hasMoreCommits)
 
   if (!commits || commits.length < 1) {
