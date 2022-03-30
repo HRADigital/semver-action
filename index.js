@@ -13,17 +13,17 @@ async function main () {
 
   const bumpTypes = {
     major: core.getInput('majorList').split(',').map(p => p.trim()).filter(p => p),
-    majorTitle: core.getInput('majorTitle'),
-    majorEmoji: core.getInput('majorEmoji'),
+    majorTitle: core.getInput('majorTitle').trim(),
+    majorEmoji: core.getInput('majorEmoji').trim(),
     minor: core.getInput('minorList').split(',').map(p => p.trim()).filter(p => p),
-    minorTitle: core.getInput('minorTitle'),
-    minorEmoji: core.getInput('minorEmoji'),
+    minorTitle: core.getInput('minorTitle').trim(),
+    minorEmoji: core.getInput('minorEmoji').trim(),
     patch: core.getInput('patchList').split(',').map(p => p.trim()).filter(p => p),
-    patchTitle: core.getInput('patchTitle'),
-    patchEmoji: core.getInput('patchEmoji'),
+    patchTitle: core.getInput('patchTitle').trim(),
+    patchEmoji: core.getInput('patchEmoji').trim(),
     patchAll: (core.getInput('patchAll') === true || core.getInput('patchAll') === 'true'),
-    contributorsTitle: core.getInput('contributorsTitle'),
-    contributorsEmoji: core.getInput('contributorsEmoji'),
+    contributorsTitle: core.getInput('contributorsTitle').trim(),
+    contributorsEmoji: core.getInput('contributorsEmoji').trim(),
   }
 
   // GET LATEST + PREVIOUS TAGS
@@ -76,7 +76,6 @@ async function main () {
     if ((curPage - 1) * 100 + rangeCommits.length < totalCommits) {
       hasMoreCommits = true
     }
-    core.info(JSON.stringify(rangeCommits))
   } while (hasMoreCommits)
 
   if (!commits || commits.length < 1) {
@@ -150,7 +149,7 @@ async function main () {
 
   buildSection = (title, commits, emoji) => {
     let section = '## ';
-    if (emoji.trim().length > 0) {
+    if (emoji.length > 0) {
       section += `${emoji} `;
     }
     section += `${title}\n\n`;
@@ -164,17 +163,17 @@ async function main () {
   }
 
   let changeLog = `# Release v${next}\n\n`;
-  if (majorChanges.length > 0) {
-    changeLog += buildSection(majorTitle, majorChanges, majorEmoji)
+  if (majorChanges.length > 0 && bumpTypes.majorTitle.length > 0) {
+    changeLog += buildSection(bumpTypes.majorTitle, majorChanges, bumpTypes.majorEmoji)
   }
-  if (minorChanges.length > 0) {
-    changeLog += buildSection(minorTitle, minorChanges, minorEmoji)
+  if (minorChanges.length > 0 && bumpTypes.minorTitle.length > 0) {
+    changeLog += buildSection(bumpTypes.minorTitle, minorChanges, bumpTypes.minorEmoji)
   }
-  if (patchChanges.length > 0) {
-    changeLog += buildSection(patchTitle, patchChanges, patchEmoji)
+  if (patchChanges.length > 0 && bumpTypes.patchTitle.length > 0) {
+    changeLog += buildSection(bumpTypes.patchTitle, patchChanges, bumpTypes.patchEmoji)
   }
-  if (authors.length > 0) {
-    changeLog += buildSection(contributorsTitle, authors, contributorsEmoji)
+  if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
+    changeLog += buildSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji)
   }
 
   // EXPORT VALUES
