@@ -87,7 +87,7 @@ async function main () {
   const majorChanges = []
   const minorChanges = []
   const patchChanges = []
-  let authors = []
+  var authors = []
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
