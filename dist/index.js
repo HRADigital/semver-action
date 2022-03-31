@@ -29882,6 +29882,7 @@ async function main () {
     } catch (err) {
       core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format.`)
     }
+    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
   }
   core.info(`MAJOR: \n` + JSON.stringify(majorChanges))
   core.info(`MINOR: \n` + JSON.stringify(minorChanges))
