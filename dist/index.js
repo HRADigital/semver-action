@@ -29832,22 +29832,6 @@ async function main () {
   let processCommit = (commit, versionChanges, typeName, versionName, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
-    core.info(`AUTHOR.EXISTS: \n` + JSON.stringify(existingAuthor))
-    core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
-    core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
-    core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
-    core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
-    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
-
-    contributors.push({
-      "name": commit.commit.author.name,
-      "email": commit.commit.author.email
-      /*,
-      "login": commit.author.login ? commit.author.login : null,
-      "url": commit.author.html_url ? commit.author.html_url : null
-      */
-    })
-
     let infoTxt = `[${versionName.toUpperCase()}] Commit ${commit.sha} `
     if (isBreakChange) {
       infoTxt += `has a BREAKING CHANGE mention, causing`
@@ -29858,27 +29842,48 @@ async function main () {
     core.info(infoTxt)
   };
 
+  let processContributors = (commit, committers) => {
+
+    core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
+    core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
+    core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
+    core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
+    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
+
+    committers.push({
+      "name": commit.commit.author.name,
+      "email": commit.commit.author.email
+      /*,
+      "login": commit.author.login ? commit.author.login : null,
+      "url": commit.author.html_url ? commit.author.html_url : null
+      */
+    })
+  };
+
   for (const commit of commits) {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
       if (bumpTypes.major.includes(cAst.type)) {
         processCommit(commit, majorChanges, cAst.type, 'major')
+        processContributors(commit, contributors)
       } else if (bumpTypes.minor.includes(cAst.type)) {
         processCommit(commit, minorChanges, cAst.type, 'minor')
+        processContributors(commit, contributors)
       } else if (bumpTypes.patchAll || bumpTypes.patch.includes(cAst.type)) {
         processCommit(commit, patchChanges, cAst.type, 'patch')
+        processContributors(commit, contributors)
       } else {
         core.info(`[SKIP] Commit ${commit.sha} of type ${cAst.type} will not cause any version bump.`)
       }
       for (const note of cAst.notes) {
         if (note.title === 'BREAKING CHANGE') {
           processCommit(commit, patchChanges, cAst.type, 'major', true)
+          processContributors(commit, contributors)
         }
       }
     } catch (err) {
       core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format.`)
     }
-    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
   }
   core.info(`MAJOR: \n` + JSON.stringify(majorChanges))
   core.info(`MINOR: \n` + JSON.stringify(minorChanges))
