@@ -111,12 +111,10 @@ async function main () {
 
     core.info(`EXISTING.AUTHOR: \n` + JSON.stringify(existingAuthor))
     core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
-    core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
-    core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
-    core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
+    core.info(`COMMIT.COMMIT.EMAIL: \n` + JSON.stringify(commit.commit.author.email))
     core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
 
-    if (typeof existingAuthor !== 'undefined') {
+    if (typeof existingAuthor === 'undefined') {
       committers.push({
         "name": commit.commit.author.name,
         "email": commit.commit.author.email,
