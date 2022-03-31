@@ -29827,20 +29827,20 @@ async function main () {
   const majorChanges = []
   const minorChanges = []
   const patchChanges = []
-  const authors = []
+  const contributors = []
 
   let processCommit = (commit, versionChanges, type, versionName, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
-    let existingAuthor = authors.find((item, index) => item.login === commit.author.login)
+    let existingAuthor = contributors.find((item, index) => item.login === commit.author.login)
 
-    if (typeof existingAuthor === 'undefined') {
-      authors.push({
+    //if (typeof existingAuthor === 'undefined') {
+      contributors.push({
         "login": commit.author.login,
         "name": commit.commit.author.name,
         "url": commit.author.html_url
       })
-    }
+    //}
 
     let infoTxt = `[${versionName.toUpperCase()}] Commit ${commit.sha} `
     if (isBreakChange) {
