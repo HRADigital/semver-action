@@ -92,10 +92,6 @@ async function main () {
   let processCommit = (commit, versionChanges, typeName, versionName, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
-    let existingAuthor = contributors.find((item, index) => {
-      return (item.login === commit.author.login || item.email === commit.commit.author.email)
-    })
-
     core.info(`AUTHOR.EXISTS: \n` + JSON.stringify(existingAuthor))
     core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
     core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
@@ -103,21 +99,13 @@ async function main () {
     core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
     core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
 
-    /*
-    if (typeof existingAuthor === 'undefined') {
-      contributors.push({
-        "name": commit.commit.author.name,
-        "email": commit.commit.author.email,
-        "login": commit.author.login ? commit.author.login : null,
-        "url": commit.author.html_url ? commit.author.html_url : null
-      })
-    }
-    */
-   contributors.push({
-      "name": 'Some name',
-      "email": 'Some email',
-      "login": 'Some Login',
-      "url": 'Some URL'
+    contributors.push({
+      "name": commit.commit.author.name,
+      "email": commit.commit.author.email
+      /*,
+      "login": commit.author.login ? commit.author.login : null,
+      "url": commit.author.html_url ? commit.author.html_url : null
+      */
     })
 
     let infoTxt = `[${versionName.toUpperCase()}] Commit ${commit.sha} `
@@ -201,7 +189,8 @@ async function main () {
     section += `${title}%0A%0A `;
 
     authors.forEach((author) => {
-      section += `- [@${author.login}](${author.url}) ${author.name}%0A `;
+      //section += `- [@${author.login}](${author.url}) ${author.name}%0A `;
+      section += `- ${author.name}%0A `;
     })
     section += `%0A `;
 
