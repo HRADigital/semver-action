@@ -116,12 +116,14 @@ async function main () {
     core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
     core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
 
-    committers.push({
-      "name": commit.commit.author.name,
-      "email": commit.commit.author.email,
-      "login": commit.author !== null ? commit.author.login : null,
-      "url": commit.author !== null ? commit.author.html_url : null
-    })
+    if (typeof existingAuthor !== 'undefined') {
+      committers.push({
+        "name": commit.commit.author.name,
+        "email": commit.commit.author.email,
+        "login": commit.author !== null ? commit.author.login : null,
+        "url": commit.author !== null ? commit.author.html_url : null
+      })
+    }
   };
 
   for (const commit of commits) {
