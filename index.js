@@ -105,10 +105,10 @@ async function main () {
 
     //if (typeof existingAuthor === 'undefined') {
       contributors.push({
-        "login": commit.author.login ?? null,
+        "login": commit.author.login ? commit.author.login : null,
         "name": commit.commit.author.name,
         "email": commit.commit.author.email,
-        "url": commit.author.html_url ?? null
+        "url": commit.author.html_url ? commit.author.html_url : null
       })
     //}
 
