@@ -89,7 +89,7 @@ async function main () {
   const patchChanges = []
   const contributors = []
 
-  let processCommit = (commit, versionChanges, typeName, versionName, isBreakChange = false) => {
+  let processCommit = (commit, versionChanges, typeName, versionName, contributors, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
     core.info(`AUTHOR.EXISTS: \n` + JSON.stringify(existingAuthor))
@@ -122,17 +122,17 @@ async function main () {
     try {
       const cAst = cc.toConventionalChangelogFormat(cc.parser(commit.commit.message))
       if (bumpTypes.major.includes(cAst.type)) {
-        processCommit(commit, majorChanges, cAst.type, 'major')
+        processCommit(commit, majorChanges, cAst.type, 'major', contributors)
       } else if (bumpTypes.minor.includes(cAst.type)) {
-        processCommit(commit, minorChanges, cAst.type, 'minor')
+        processCommit(commit, minorChanges, cAst.type, 'minor', contributors)
       } else if (bumpTypes.patchAll || bumpTypes.patch.includes(cAst.type)) {
-        processCommit(commit, patchChanges, cAst.type, 'patch')
+        processCommit(commit, patchChanges, cAst.type, 'patch', contributors)
       } else {
         core.info(`[SKIP] Commit ${commit.sha} of type ${cAst.type} will not cause any version bump.`)
       }
       for (const note of cAst.notes) {
         if (note.title === 'BREAKING CHANGE') {
-          processCommit(commit, patchChanges, cAst.type, 'major', true)
+          processCommit(commit, patchChanges, cAst.type, 'major', contributors, true)
         }
       }
     } catch (err) {
