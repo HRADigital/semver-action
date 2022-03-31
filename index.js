@@ -109,11 +109,6 @@ async function main () {
       return (item.email === commit.commit.author.email)
     })
 
-    core.info(`EXISTING.AUTHOR: \n` + JSON.stringify(existingAuthor))
-    core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
-    core.info(`COMMIT.COMMIT.EMAIL: \n` + JSON.stringify(commit.commit.author.email))
-    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
-
     if (typeof existingAuthor === 'undefined') {
       committers.push({
         "name": commit.commit.author.name,
@@ -149,10 +144,6 @@ async function main () {
       core.info(`[INVALID] Skipping commit ${commit.sha} as it doesn't follow conventional commit format.`)
     }
   }
-  core.info(`MAJOR: \n` + JSON.stringify(majorChanges))
-  core.info(`MINOR: \n` + JSON.stringify(minorChanges))
-  core.info(`PATCH: \n` + JSON.stringify(patchChanges))
-  core.info(`CONTRIBUTORS: \n` + JSON.stringify(contributors))
 
   let bump = null
   if (majorChanges.length > 0) {
