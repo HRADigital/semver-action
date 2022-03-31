@@ -89,11 +89,11 @@ async function main () {
   const patchChanges = []
   const contributors = []
 
-  let processCommit = (commit, versionChanges, type, versionName, isBreakChange = false) => {
+  let processCommit = (commit, versionChanges, typeName, versionName, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
     let existingAuthor = contributors.find((item, index) => {
-      item.login === commit.author.login || item.email === commit.commit.author.email
+      return (item.login === commit.author.login || item.email === commit.commit.author.email)
     })
 
     core.info(`AUTHOR.EXISTS: \n` + JSON.stringify(existingAuthor))
@@ -105,9 +105,9 @@ async function main () {
 
     //if (typeof existingAuthor === 'undefined') {
       contributors.push({
-        "login": commit.author.login ? commit.author.login : null,
         "name": commit.commit.author.name,
         "email": commit.commit.author.email,
+        "login": commit.author.login ? commit.author.login : null,
         "url": commit.author.html_url ? commit.author.html_url : null
       })
     //}
@@ -116,7 +116,7 @@ async function main () {
     if (isBreakChange) {
       infoTxt += `has a BREAKING CHANGE mention, causing`
     } else {
-      infoTxt += `of type ${type} will cause`
+      infoTxt += `of type ${typeName} will cause`
     }
     infoTxt += ` a ${versionName.toLowerCase()} version bump.`
     core.info(infoTxt)
