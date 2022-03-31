@@ -29876,7 +29876,7 @@ async function main () {
   core.info(`MAJOR: \n` + JSON.stringify(majorChanges))
   core.info(`MINOR: \n` + JSON.stringify(minorChanges))
   core.info(`PATCH: \n` + JSON.stringify(patchChanges))
-  core.info(`AUTHORS: \n` + JSON.stringify(authors))
+  core.info(`CONTRIBUTORS: \n` + JSON.stringify(contributors))
 
   let bump = null
   if (majorChanges.length > 0) {
