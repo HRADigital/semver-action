@@ -114,8 +114,8 @@ async function main () {
     committers.push({
       "name": commit.commit.author.name,
       "email": commit.commit.author.email,
-      "login": commit.author.login ? commit.author.login : null,
-      "url": commit.author.html_url ? commit.author.html_url : null
+      "login": commit.author !== null ? commit.author.login : null,
+      "url": commit.author !== null ? commit.author.html_url : null
     })
   };
 
