@@ -29839,6 +29839,7 @@ async function main () {
       infoTxt += `of type ${typeName} will cause`
     }
     infoTxt += ` a ${versionName.toLowerCase()} version bump.`
+
     core.info(infoTxt)
   };
 
@@ -29852,11 +29853,9 @@ async function main () {
 
     committers.push({
       "name": commit.commit.author.name,
-      "email": commit.commit.author.email
-      /*,
+      "email": commit.commit.author.email,
       "login": commit.author.login ? commit.author.login : null,
       "url": commit.author.html_url ? commit.author.html_url : null
-      */
     })
   };
 
@@ -29926,16 +29925,19 @@ async function main () {
     return section
   }
 
-  buildAuthorsSection = (title, authors, emoji) => {
+  buildContributorsSection = (title, contributors, emoji) => {
     let section = '## ';
     if (emoji.length > 0) {
       section += `${emoji} `;
     }
     section += `${title}%0A%0A `;
 
-    authors.forEach((author) => {
-      //section += `- [@${author.login}](${author.url}) ${author.name}%0A `;
-      section += `- ${author.name}%0A `;
+    contributors.forEach((author) => {
+      if (author.login !== null && author.url !== null) {
+        section += `- [@${author.login}](${author.url}) ${author.name}%0A `;
+      } else {
+        section += `- ${author.name}%0A `;
+      }
     })
     section += `%0A `;
 
@@ -29952,9 +29954,9 @@ async function main () {
   if (patchChanges.length > 0 && bumpTypes.patchTitle.length > 0) {
     changeLog += buildVersionSection(bumpTypes.patchTitle, patchChanges, bumpTypes.patchEmoji)
   }
-  //if (contributors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
-    changeLog += buildAuthorsSection(bumpTypes.contributorsTitle, contributors, bumpTypes.contributorsEmoji)
-  //}
+  if (contributors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
+    changeLog += buildContributorsSection(bumpTypes.contributorsTitle, contributors, bumpTypes.contributorsEmoji)
+  }
 
   core.info(`CHANGELOG : %0A${changeLog}%0A`)
 
