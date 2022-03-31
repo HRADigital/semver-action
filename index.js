@@ -94,10 +94,11 @@ async function main () {
 
     let existingAuthor = contributors.find((item, index) => item.login === commit.author.login)
 
-    core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author))
-    core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer))
+    core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
+    core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
     core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
     core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
+    core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
 
     //if (typeof existingAuthor === 'undefined') {
       contributors.push({
