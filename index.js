@@ -105,6 +105,11 @@ async function main () {
 
   let processContributors = (commit, committers) => {
 
+    let existingAuthor = committers.find((item, index) => {
+      return (item.email === commit.commit.author.email)
+    })
+
+    core.info(`EXISTING.AUTHOR: \n` + JSON.stringify(existingAuthor))
     core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
     core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
     core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
