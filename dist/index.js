@@ -29939,8 +29939,8 @@ async function main () {
   if (patchChanges.length > 0 && bumpTypes.patchTitle.length > 0) {
     changeLog += buildVersionSection(bumpTypes.patchTitle, patchChanges, bumpTypes.patchEmoji)
   }
-  //if (authors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
-    changeLog += buildAuthorsSection(bumpTypes.contributorsTitle, authors, bumpTypes.contributorsEmoji)
+  //if (contributors.length > 0 && bumpTypes.contributorsTitle.length > 0) {
+    changeLog += buildAuthorsSection(bumpTypes.contributorsTitle, contributors, bumpTypes.contributorsEmoji)
   //}
 
   core.info(`CHANGELOG : %0A${changeLog}%0A`)
