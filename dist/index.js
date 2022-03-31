@@ -29832,8 +29832,11 @@ async function main () {
   let processCommit = (commit, versionChanges, type, versionName, isBreakChange = false) => {
     versionChanges.push(commit.commit.message)
 
-    let existingAuthor = contributors.find((item, index) => item.login === commit.author.login)
+    let existingAuthor = contributors.find((item, index) => {
+      item.login === commit.author.login || item.email === commit.commit.author.email
+    })
 
+    core.info(`AUTHOR.EXISTS: \n` + JSON.stringify(existingAuthor))
     core.info(`COMMIT.COMMIT.AUTHOR: \n` + JSON.stringify(commit.commit.author.name))
     core.info(`COMMIT.COMMIT.COMMITTER: \n` + JSON.stringify(commit.commit.committer.name))
     core.info(`COMMIT.AUTHOR: \n` + JSON.stringify(commit.author))
@@ -29842,9 +29845,10 @@ async function main () {
 
     //if (typeof existingAuthor === 'undefined') {
       contributors.push({
-        "login": commit.author.login,
+        "login": commit.author.login ?? null,
         "name": commit.commit.author.name,
-        "url": commit.author.html_url
+        "email": commit.commit.author.email,
+        "url": commit.author.html_url ?? null
       })
     //}
 
