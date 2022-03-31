@@ -214,7 +214,7 @@ async function main () {
     changeLog += buildContributorsSection(bumpTypes.contributorsTitle, contributors, bumpTypes.contributorsEmoji)
   }
 
-  core.info(`CHANGELOG : %0A${changeLog}%0A`)
+  core.info(`Change log is %0A${changeLog}%0A`)
 
   // EXPORT VALUES
 
