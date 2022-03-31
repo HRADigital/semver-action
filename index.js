@@ -103,14 +103,22 @@ async function main () {
     core.info(`COMMIT.COMMITTER: \n` + JSON.stringify(commit.committer))
     core.info(`FULL.COMMIT: \n` + JSON.stringify(commit))
 
-    //if (typeof existingAuthor === 'undefined') {
+    /*
+    if (typeof existingAuthor === 'undefined') {
       contributors.push({
         "name": commit.commit.author.name,
         "email": commit.commit.author.email,
         "login": commit.author.login ? commit.author.login : null,
         "url": commit.author.html_url ? commit.author.html_url : null
       })
-    //}
+    }
+    */
+   contributors.push({
+      "name": 'Some name',
+      "email": 'Some email',
+      "login": 'Some Login',
+      "url": 'Some URL'
+    })
 
     let infoTxt = `[${versionName.toUpperCase()}] Commit ${commit.sha} `
     if (isBreakChange) {
